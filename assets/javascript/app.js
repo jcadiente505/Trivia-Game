@@ -121,7 +121,7 @@ function hidebackground () {
 	questDisney.splice(index,1);
 
 	var hideback = setTimeout(function() {
-		$("#questionBackgroundDiv").empty();
+		$("#questionBackgroundDiv").hide();
 		timer= 20;
 
 	if ((wrong + correct + unanswered) === questCounter) {
