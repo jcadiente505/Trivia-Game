@@ -1,0 +1,21 @@
+.jumbotron{
+	background-image: url('../images/jumbotron-background.jpg');
+	background-size: cover;
+    background-repeat: no-repeat;
+    margin-bottom: 0%;
+}
+
+#header {
+    color: white;
+}
+
+.wrapper {
+    text-align: center;
+    color: white;
+}
+
+#questionBackgroundDiv {
+    background-image: url('../images/star-wars-trivia-bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
