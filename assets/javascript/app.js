@@ -117,7 +117,7 @@ var holder = [];
 
 $("#reset").hide()
 //Disney Section!
-$("#disney").on("click", function () {
+ $("#disney").on("click", function () {
 	questCurrent = questDisney;
 	questCounterDisney = questCurrent.length;
 	$("#disney").hide();
@@ -269,5 +269,14 @@ $(".answerchoice").on("click", function () {
 })
 
 $("#reset").on("click", function () {
-	location.reload()
+	$("#reset").hide();
+	$("#answersection").empty();
+	$("#questionsection").empty();
+	$("#backgroundphoto").css("background-image", " url('assets/images/star-wars-trivia-bg.jpg' )");
+	$("#disney").show()
+	$("#EU").show()
+	
+	for (var i = 0; i < holder.length; i++) {
+		questCurrent.push(holder[i]);
+	}
 })
