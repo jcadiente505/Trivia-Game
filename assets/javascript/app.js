@@ -1,4 +1,6 @@
 //questions object array
+
+var questCurrent;
 var questDisney = [
 	{
 		question: "On what planet, did Luke Skywalker train with Yoda?",
@@ -106,8 +108,8 @@ var timer = 20;
 var intervalId;
 var userGuess = "";
 var running = false;
-var questCounterDisney = questDisney.length;
-var questCounterEU = questEU.length;
+var questCounterDisney;
+// var questCounterEU = questEU.length;
 var pick;
 var index;
 var newArray = [];
@@ -116,14 +118,29 @@ var holder = [];
 $("#reset").hide()
 //Disney Section!
 $("#disney").on("click", function () {
+	questCurrent = questDisney;
+	questCounterDisney = questCurrent.length;
 	$("#disney").hide();
 	$("#EU").hide();
 	displayQuestion();
 	timeStart();
-	for (var i = 0; i < questDisney.length; i++) {
-		holder.push(questDisney[i]);
+	for (var i = 0; i < questCurrent.length; i++) {
+		holder.push(questCurrent[i]);
 	}
 })
+// EU section
+$("#EU").on("click", function () {
+	questCurrent = questEU;
+	questCounterDisney = questCurrent.length;
+	$("#disney").hide();
+	$("#EU").hide();
+	displayQuestion();
+	timeStart();
+	for (var i = 0; i < questCurrent.length; i++) {
+		holder.push(questCurrent[i]);
+	}
+})
+
 //functions
 // Timer Function: Start
 function timeStart() {
@@ -149,28 +166,38 @@ function timeDecrease() {
 function timeStop() {
 	running = false;
 	clearInterval(intervalId);
+	$("#timer").empty()
 }
 // Generates the question
 function displayQuestion() {
-	index = Math.floor(Math.random() * questDisney.length);
-	pick = questDisney[index];
-	$("body").css("background-image", "url(" + pick.photo + ")");
+	// grabs a question randomly from array
+	index = Math.floor(Math.random() * questCurrent.length);
+	pick = questCurrent[index];
+	// updates associated background photo w/question
+	$("#backgroundphoto").css("background-image", "url(" + pick.photo + ")");
+	// empty's the previous question
 	$("#answersection").empty()
-
+	// displays the picked question in div
 	$("#questionsection").html("<h2>" + pick.question + "</h2>");
+	// for loop to loop through picked question answer choices
 	for (var i = 0; i < pick.choice.length; i++) {
+		// adding buttons too each answer choice
+		// EDIT! MUST ADD "CLICK LISTENER" TOO DYNAMICALLY CREATED BUTTONS BEFORE THEY ARE CREATED!
+		// WILL NOT REGISTER "CLICK" IF CREATED AFTER 
 			var userChoice = $("<button>" + pick.choice[i] + "</button>").on("click", function (){ 
-
+				// use parseint too turn the choice string into guessvalue number
 				userGuess = parseInt($(this).attr("data-guessvalue"));
 
 				console.log(userGuess)
+				// compares the string that was turned into number against the answer pick number
+				// if numbers are the same update correct counter
 				if (userGuess === pick.answer) {
 				stop();
 				correct++;
 				userGuess = "";
 				$("#answersection").html("<p>Correct!</p>");
 				hidebackground();
-
+				// if numbers are different updated wrong counter
 				} else {
 				stop();
 				wrong++;
@@ -191,14 +218,16 @@ function displayQuestion() {
 
 // hides picture after 
 function hidebackground() {
-	$("body").css("background-image", "url(" + pick.photo + ")");
+	$("#backgroundphoto").css("background-image", "url(" + pick.photo + ")");
 	newArray.push(pick);
-	questDisney.splice(index, 1);
+	questCurrent.splice(index, 1);
 
 	var hideback = setTimeout(function () {
 		timer = 20;
 
 		if ((wrong + correct + unanswered) === questCounterDisney) {
+			
+			timeStop()
 			$("#questionsection").empty();
 			$("#questionsection").html("<h3>Game Over!  Here's how you did: </h3>");
 			$("#answersection").append("<h4> Correct: " + correct + "</h4>");
@@ -240,88 +269,5 @@ $(".answerchoice").on("click", function () {
 })
 
 $("#reset").on("click", function () {
-	$("#reset").hide();
-	$("#answersection").empty();
-	$("#questionsection").empty();
-	for (var i = 0; i < holder.length; i++) {
-		questDisney.push(holder[i]);
-	}
-	timeStart();
-	displayQuestion();
+	location.reload()
 })
-
-//Expanded Universe Section!
-
-
-
-	$("#EU").on("click", function () {
-		$("#disney").hide();
-		$("#EU").hide();
-		displayQuestionEU();
-		timeStart();
-		for(var i = 0; i < questEU.length; i++) {
-			holder.push(questEU[i]);
-			}
-	})
-
-	function displayQuestionEU() {
-		index = Math.floor(Math.random()*questEU.length);
-		pick = questEU[index];
-		$("body").css("background-image", "url(" + pick.photo + ")");
-
-			$("#questionsection").html("<h2>" + pick.question + "</h2>");
-			for(var i = 0; i < pick.choice.length; i++) {
-				var userChoice = $("<button>" + pick.choice[i] + "</button>").on("click", function (){ 
-
-					userGuess = parseInt($(this).attr("data-guessvalue"));
-	
-					console.log(userGuess)
-					if (userGuess === pick.answer) {
-					stop();
-					correct++;
-					userGuess = "";
-					$("#answersection").html("<p>Correct!</p>");
-					hidebackgroundEU();
-	
-					} else {
-					stop();
-					wrong++;
-					userGuess = "";
-					$("#answersection").html("<p>Wrong! The correct answer is: " + pick.choice[pick.answer] + "</p>");
-					hidebackgroundEU();
-				}
-			})
-				userChoice.addClass("answerchoice");
-				userChoice.attr("data-guessvalue", i)
-				userChoice.addClass("btn btn-dark btn-sm")
-				$("#answersection").append(userChoice);
-			};
-		}
-
-	function hidebackgroundEU () {
-		$("body").css("background-image", "url(" + pick.photo + ")");
-		newArray.push(pick);
-		questEU.splice(index,1);
-
-		var hideback = setTimeout(function() {
-			$("#answersection").empty();
-			timer= 20;
-
-		if ((wrong + correct + unanswered) === questCounterEU) {
-			$("#questionsection").empty();
-			$("#questionsection").html("<h3>Game Over!  Here's how you did: </h3>");
-			$("#answersection").append("<h4> Correct: " + correct + "</h4>" );
-			$("#answersection").append("<h4> Incorrect: " + wrong + "</h4>" );
-			$("#answersection").append("<h4> Unanswered: " + unanswered + "</h4>" );
-			$("#reset").show();
-			correct = 0;
-			wrong = 0;
-			unanswered = 0;
-
-		} else {
-			timeStart();
-			displayQuestionEU();
-
-		}
-		}, 3000);
-	}

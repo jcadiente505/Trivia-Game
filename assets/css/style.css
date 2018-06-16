@@ -14,8 +14,13 @@
     color: white;
 }
 
-body {
+#backgroundphoto {
+    height: 500px;
     background-image: url('../images/star-wars-trivia-bg.jpg');
     background-size: cover;
     background-repeat: no-repeat;
+}
+
+#reset {
+    text-align: center;
 }
